@@ -4,7 +4,24 @@ require 'result'
 
 RSpec.describe 'Result for API' do
   def result_for_api(status, api)
-    # TODO
+    success = api.is_a?(Hash) ? api[:success] : nil
+
+    case [status, api, success]
+    in [200, {}, nil]
+      Result::Success.new(nil)
+    in [200, Hash, false]
+      Result::Failure.new([])
+    in [200, Hash, nil]
+      Result::Success.new(api[:payload] || api.except(:success))
+    in [200, Hash, true]
+      Result::Success.new(api[:payload] || api.except(:success))
+    in [500, {}, nil]
+      Result::Failure.new([])
+    in [500, String, nil]
+       Result::Failure.new([api])
+    in [500, Hash, nil]
+       Result::Failure.new(api.values.flatten)
+    end
   end
 
   context 'status OK' do
