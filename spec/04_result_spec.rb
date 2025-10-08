@@ -4,7 +4,12 @@ require 'result'
 
 RSpec.describe 'Result desconstructing' do
   def dummy(callback, result)
-    # TODO
+    case result
+    in Result::Success[value]
+      callback.call(true, value)
+    in Result::Failure[value]
+      callback.call(false, value)
+    end
   end
 
   let(:callback) { spy }

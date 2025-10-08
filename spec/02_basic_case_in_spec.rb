@@ -2,7 +2,14 @@
 
 RSpec.describe 'Basic case..in' do
   def to_num(value)
-    # TODO
+    case value
+    in Numeric
+      value
+    in String
+      value.to_i
+    in Symbol
+      value.to_s.to_i
+    end
   end
 
   it 'leaves Numeric as is' do
